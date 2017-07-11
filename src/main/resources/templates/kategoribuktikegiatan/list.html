@@ -17,9 +17,10 @@
                         <div class="box-header with-border">
                             <a class="box-title btn btn-primary" th:href="@{/kategoribuktikegiatan/form}">Tambah kategori bukti kegiatan</a>
                             <div class="box-tools">
-                                <form id="form" action="#" method="get" th:action="@{/kategoribuktikegiatan/search}">
-                                    <div class="input-group input-group-sm" style="width: 150px;">
-                                        <input type="text" name="value" class="form-control pull-right" placeholder="Search"/>
+                                <form id="form" action="#" method="get" th:action="@{/kategoribuktikegiatan/list}">
+                                    <div class="input-group input-group-sm" style="width: 200px;">
+                                        <input type="text" name="value" class="form-control pull-right" placeholder="Pencarian berdasarkan nama" th:if="${key} == null"/>
+                                        <input type="text" name="value" class="form-control pull-right" placeholder="Pencarian berdasarkan nama" th:if="${key} != null" th:value="${key}"/>
                                         <input type="hidden" name="mode" id="mode"/>
                                         <div class="input-group-btn">
                                             <button type="submit" class="btn btn-default"><i class="fa fa-search"></i></button>
@@ -36,7 +37,7 @@
                                         <th>Keterangan</th>
                                         <th>&nbsp;</th>
                                     </tr>
-                                    <tr th:each="kategori : ${kategoriBuktiKegiatanList}">
+                                    <tr th:each="kategori : ${data}">
                                         <td th:text="${kategori.nama}">SK Penugasan</td>
                                         <td th:text="${kategori.keterangan}">Keterangan</td>
                                         <td>
@@ -46,6 +47,17 @@
                                     </tr>
                                 </tbody>
                             </table>
+                        </div>
+                        <div th:if="${not #lists.isEmpty(data.content)}">
+                            <div class="text-center"> 
+                                <nav>
+                                    <ul class="pagination" sd:pagination="full">
+                                        <!-- Pagination created by SpringDataDialect, this content is just for mockup -->
+                                        <li class="disabled"><a href="#" aria-label="Previous"><span aria-hidden="true">&laquo;</span></a></li>
+                                        <li class="active"><a href="#">1 <span class="sr-only">(current)</span></a></li>
+                                    </ul>
+                                </nav>
+                            </div>
                         </div>
                     </div>
                 </div>

@@ -8,6 +8,8 @@ import id.ac.tazkia.dosen.entity.*;
 import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
@@ -33,8 +35,13 @@ public class PoinKegiatanController {
     private JenisKegiatanDao jenisKegiatanDao;
     
     @RequestMapping("/poinkegiatan/list")
-    public String poinKegiatan(Model model) {
-        model.addAttribute("poinKegiatanList", poinKegiatanDao.findAll());
+    public String poinKegiatan(Model model, @PageableDefault(size = 10) Pageable pageable,@RequestParam(name = "value",required = false) String value) {
+        if(value!=null){
+            model.addAttribute("key",value);
+            model.addAttribute("data",poinKegiatanDao.findByJenisKegiatanNamaContainingIgnoreCase(value, pageable));
+        }else{
+            model.addAttribute("data", poinKegiatanDao.findAll(pageable));
+        }
         return "/poinkegiatan/list";
     }
     
@@ -79,28 +86,4 @@ public class PoinKegiatanController {
         status.setComplete();
         return "redirect:/poinkegiatan/list";
     }
-    
-//    @ModelAttribute("daftarJabatan")
-//    public Iterable<Jabatan> daftarJabatan() {
-//        return jabatanDao.findAll();
-//    }
-//
-//    @ModelAttribute("daftaJenisKegiatan")
-//    public Iterable<JenisKegiatan> daftarJenisKegiatan() {
-//        return jenisKegiatanDao.findAll();
-//    }
-//
-//    @GetMapping("/poinkegiatan/list")
-//    public void list(){
-//
-//    }
-//
-    
-//
-//
-//
-//    @PostMapping("/poinkegiatan/form")
-//    public String prosesForm(){
-//        return "redirect:/poinkegiatan/list";
-//    }
 }

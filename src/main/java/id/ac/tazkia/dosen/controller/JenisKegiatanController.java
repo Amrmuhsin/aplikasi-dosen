@@ -11,6 +11,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
@@ -31,8 +33,15 @@ public class JenisKegiatanController {
     private KategoriKegiatanDao kategoriKegiatanDao;
 
     @RequestMapping("/jeniskegiatan/list")
-    public String jenisKegiatan(Model model) {
-        model.addAttribute("jenisKegiatanList", jenisKegiatanDao.findAll());
+    public String jenisKegiatan(Model model, @PageableDefault(size = 10) Pageable pageable,
+            @RequestParam(name = "value",required = false) String value) {
+        
+        if(value != null){
+            model.addAttribute("key",value);
+            model.addAttribute("data",jenisKegiatanDao.findByNamaContainingIgnoreCase(value, pageable));
+        }else{
+            model.addAttribute("data", jenisKegiatanDao.findAll(pageable));
+        }
         return "/jeniskegiatan/list";
     }
 
