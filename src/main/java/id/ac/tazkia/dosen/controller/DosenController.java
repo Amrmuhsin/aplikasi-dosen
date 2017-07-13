@@ -21,6 +21,8 @@ import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.support.SessionStatus;
 
 @Controller
 public class DosenController {
@@ -69,7 +71,7 @@ public class DosenController {
     }
 
     @RequestMapping(value = "/dosen/form", method = RequestMethod.POST)
-    public String simpan(@Valid Dosen dosen, ModelMap mm, BindingResult errors) {
+    public String simpan(@ModelAttribute @Valid Dosen dosen, BindingResult errors, SessionStatus status) {
         if (errors.hasErrors()) {
             return "dosen/form";
         }
@@ -93,6 +95,7 @@ public class DosenController {
 
         dosen.setUser(user);
         dosenDao.save(dosen);
+        status.setComplete();
 
         return "redirect:/dosen/list";
     }
